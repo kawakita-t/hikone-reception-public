@@ -66,11 +66,31 @@ if (status == "answered") {
 
 }
 
-answerButton.addEventListener("click", function () {
+answerButton.addEventListener("click", async function () {
 
     staffMessage.textContent = "対応中です";
 
-    fetch(receptionServerUrl + "?action=answer");
+    // サーバーへ応答を送る
+    await fetch(receptionServerUrl + "?action=answer");
+
+    // Meet URLを取得
+    const response =
+        await fetch(receptionServerUrl + "?action=meet");
+
+    const meetUrl =
+        await response.text();
+
+    console.log(meetUrl);
+
+    if (meetUrl !== "") {
+        window.open(meetUrl, "_blank");
+    }
+    
+    setTimeout(async function () {
+
+    await fetch(receptionServerUrl + "?action=reset");
+
+}, 10000);
 
 });
 
