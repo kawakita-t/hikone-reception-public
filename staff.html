@@ -7,15 +7,25 @@
   <link rel="stylesheet" href="style.css">
 </head>
 
+
 <body>
 
   <h1>スタッフ画面</h1>
 
   <h2 id="staffMessage">現在、呼び出しはありません</h2>
 
+<button id="enableSoundButton">
+  通知音を有効にする
+</button>
+
   <button id="answerButton">
     応答する
   </button>
+
+
+<audio id="callSound" controls loop>
+  <source src="call.mp3" type="audio/mpeg">
+</audio>
 
   <script src="staff.js"></script>
 

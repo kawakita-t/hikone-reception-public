@@ -1,28 +1,40 @@
-// 受付画面と受信画面をつなぐ通信
-const channel = new BroadcastChannel("reception-channel");
 
-// ボタンとメッセージ表示
+
 const callButton = document.getElementById("callStaff");
 const message = document.getElementById("message");
 
-// 「スタッフを呼ぶ」が押されたとき
+const receptionServerUrl =
+    "https://script.google.com/macros/s/AKfycbwA56Izss19zv1thnVKOm3b1nbRmfTJ5-fTM4sMbV2W8EgfstLINaIe3l4B25XNKa8JFg/exec";
 callButton.addEventListener("click", function () {
 
-    // 受付画面の表示
     message.textContent = "スタッフを呼び出しています…";
 
-    // 受信画面へ通知
-    channel.postMessage("call");
 
-    // Google Meetを開く
-    //window.open(
-    //    "Google Meet URL",
-    //    "_blank"
-    //);
+    // インターネット上の受付サーバーへ通知
+fetch(receptionServerUrl + "?action=call", {
+    mode: "no-cors"
+})
+.catch(error => {
+    console.error(error);
+});
 
 });
-channel.addEventListener("message", function (event) {
-    if (event.data === "answered") {
+
+async function checkStatus() {
+
+    const response =
+        await fetch(receptionServerUrl + "?action=status");
+
+    const status =
+        await response.text();
+if (status == "idle") {
+    message.textContent = "";
+}
+    if (status == "answered") {
         message.textContent = "スタッフが応答しました";
     }
-});
+
+}
+
+checkStatus();
+setInterval(checkStatus, 5000);
